@@ -173,7 +173,7 @@ void TheoryFiniteFields::preRegisterWithEe(TNode node)
 
 void TheoryFiniteFields::preRegisterTerm(TNode node)
 {
-  preRegisterWithEe(node);
+  //preRegisterWithEe(node);
 #ifdef CVC5_USE_COCOA
   Trace("ff::register") << "ff::preRegisterTerm : " << node << std::endl;
   TypeNode ty = node.getType();

@@ -124,6 +124,16 @@ Result SubTheory::postCheck(Theory::Effort e)
         const auto basis = GBasisTimeout(ideal, d_env.getResourceManager());
         if (options().ff.ffTraceGb) tracer.unsetFunctionPointers();
 
+        if (options().ff.ffCertificate) {
+          // std::cout << std::endl << "PRINTING MY (OLD WAY) POLYNOMIALS" << std::endl;
+          // tracer.printReductions();
+          // std::cout << std::endl;
+        
+          // std::cout << "PRINTING MY POLYNOMIALS" << std::endl;
+          tracer.printRedUNSAT();
+          std::cout << std::endl;
+        }
+
         // if it is trivial, create a conflict
         bool is_trivial = basis.size() == 1 && CoCoA::deg(basis.front()) == 0;
         if (is_trivial)

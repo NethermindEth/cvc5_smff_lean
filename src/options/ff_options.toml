@@ -2,6 +2,14 @@ id     = "FF"
 name   = "Finite Field Theory"
 
 [[option]]
+  name       = "ffCertificate"
+  category   = "expert"
+  long       = "ff-certificate"
+  type       = "bool"
+  default    = "false"
+  help       = "enable proof certificate extraction"
+
+[[option]]
   name       = "ffTraceGb"
   category   = "expert"
   long       = "ff-trace-gb"

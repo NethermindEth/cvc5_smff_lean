@@ -124,20 +124,12 @@ Result SubTheory::postCheck(Theory::Effort e)
         const auto basis = GBasisTimeout(ideal, d_env.getResourceManager());
         if (options().ff.ffTraceGb) tracer.unsetFunctionPointers();
 
-        if (options().ff.ffCertificate) {
-          // std::cout << std::endl << "PRINTING MY (OLD WAY) POLYNOMIALS" << std::endl;
-          // tracer.printReductions();
-          // std::cout << std::endl;
-        
-          // std::cout << "PRINTING MY POLYNOMIALS" << std::endl;
-          tracer.printRedUNSAT();
-          std::cout << std::endl;
-        }
-
         // if it is trivial, create a conflict
         bool is_trivial = basis.size() == 1 && CoCoA::deg(basis.front()) == 0;
         if (is_trivial)
         {
+          if (options().ff.ffCertificate) { tracer.printRedUNSAT(); }
+
           Trace("ff::gb") << "Trivial GB" << std::endl;
           if (options().ff.ffTraceGb)
           {
@@ -174,6 +166,7 @@ Result SubTheory::postCheck(Theory::Effort e)
           if (root.empty())
           {
             // UNSAT
+            if (options().ff.ffCertificate) { std::cout << "UNSAT(NO_CERTIFICATE)" << std::endl; }
             setTrivialConflict();
           }
           else
@@ -182,6 +175,7 @@ Result SubTheory::postCheck(Theory::Effort e)
             Assert(d_model.empty());
             const auto nm = nodeManager();
             Trace("ff::model") << "Model GF(" << size() << "):" << std::endl;
+            if (options().ff.ffCertificate) { std::cout << "SAT(" << std::endl; }
             for (const auto& [idx, node] : enc.nodeIndets())
             {
               if (isFfLeaf(node))
@@ -189,9 +183,13 @@ Result SubTheory::postCheck(Theory::Effort e)
                 Node value = nm->mkConst(enc.cocoaFfToFfVal(root[idx]));
                 Trace("ff::model")
                     << " " << node << " = " << value << std::endl;
+                if (options().ff.ffCertificate) { 
+                  std::cout << "\t" << node << " = " << value << std::endl; 
+                }
                 d_model.emplace(node, value);
               }
             }
+            if (options().ff.ffCertificate) { std::cout << ")" << std::endl; }
           }
         }
       }

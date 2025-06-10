@@ -330,7 +330,7 @@ void Tracer::printRedUNSAT() {
       Assert(m != polynomials.rend());
       
       size_t monic_idx = polynomials.rend() - m - 1;
-      std::cout << tab << "m " << monic_idx << " " << next << std::endl;
+      std::cout << tab << "M(" << monic_idx << ", " << next << ")" << std::endl;
       pstack.push_back(monic_idx);
       
     } else if(p.spoly) {
@@ -352,8 +352,8 @@ void Tracer::printRedUNSAT() {
       // const auto spoly = ((lcm / lmp) * polynomials[s1_index].p) - ((lcm / lmq) * polynomials[s2_index].p);
       // std::cout << "SPOLY " << spoly << std::endl;
 
-      std::cout << tab << "s " << s1_index << " " << s2_index << " " << next;
-      std::cout << " LCM(" << lcm << ")" << std::endl;
+      std::cout << tab << "S(" << s1_index << ", " << s2_index << ", " << next;
+      std::cout << ", " << lcm << ")" << std::endl;
       pstack.push_back(s1_index);
       pstack.push_back(s2_index);
 
@@ -365,7 +365,7 @@ void Tracer::printRedUNSAT() {
       const auto red = reductions.find(r_index);
       Assert(red != reductions.end());
       
-      std::cout << tab << "r " << red->second.initialPoly << " ";
+      std::cout << tab << "R(" << red->second.initialPoly << ", ";
       pstack.push_back(r_index);
 
       auto pred = polynomials[red->second.initialPoly].p;
@@ -378,10 +378,10 @@ void Tracer::printRedUNSAT() {
         const auto c = lmp / lmd; 
         pred = pred - c * d;
         
-        std::cout << s << "(" << c << ") ";
+        std::cout << s << "{" << c << "}, ";
         pstack.push_back(s);
       }
-      std::cout << red->second.finalPoly << std::endl;
+      std::cout << red->second.finalPoly << ")" << std::endl;
     }
   }
 
@@ -393,7 +393,7 @@ void Tracer::printRedUNSAT() {
   std::cout << tab << "POLYNOMIALS(" << std::endl; tab += "\t";
   for(size_t i = 0; i < polynomials.size(); i += 1) {
     if(!seen[i]) { continue; }
-    std::cout << tab << i << ": " << polynomials[i].p << std::endl;
+    std::cout << tab << "P(" << i << ", " << polynomials[i].p << ")" << std::endl;
   }
 
   // POLYNOMIALS

@@ -183,8 +183,11 @@ Result SubTheory::postCheck(Theory::Effort e)
                 Node value = nm->mkConst(enc.cocoaFfToFfVal(root[idx]));
                 Trace("ff::model")
                     << " " << node << " = " << value << std::endl;
-                if (options().ff.ffCertificate) { 
-                  std::cout << "\t" << node << " = " << value << std::endl; 
+                if (options().ff.ffCertificate) {
+                  const auto v = enc.cocoaFfToFfVal(root[idx]);
+                  std::cout << "\t" << "MODEL(" << node << ", ";
+                  std::cout << "FFV(" << v.getValue() << ", " << v.getFieldSize() << ")";
+                  std::cout << ")" << std::endl;
                 }
                 d_model.emplace(node, value);
               }

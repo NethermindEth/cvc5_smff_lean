@@ -128,7 +128,11 @@ Result SubTheory::postCheck(Theory::Effort e)
         bool is_trivial = basis.size() == 1 && CoCoA::deg(basis.front()) == 0;
         if (is_trivial)
         {
-          if (options().ff.ffCertificate) { tracer.printRedUNSAT(); }
+          if (options().ff.ffCertificate) { 
+            // tracer.printReductions();
+            // std::cout << std::endl << "NEW" << std::endl;
+            tracer.printRedUNSAT(); 
+          }
 
           Trace("ff::gb") << "Trivial GB" << std::endl;
           if (options().ff.ffTraceGb)

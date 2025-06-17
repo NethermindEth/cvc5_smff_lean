@@ -154,9 +154,9 @@ void Tracer::sPoly(CoCoA::ConstRefRingElem p,
   auto qi = std::find_if(polynomials.begin(), polynomials.end(), [&](const Poly &f) { return equalPoly(f.p, q); });
   Assert(qi != polynomials.end()); 
   
-  // size_t index_p = std::distance(polynomials.begin(), pi);
-  // size_t index_q = std::distance(polynomials.begin(), qi);
-  //std::cout << "(Core) sPoly: " << p << " (" << index_p << "), " << q << " (" << index_q << ") -> " << s << std::endl;
+  size_t index_p = std::distance(polynomials.begin(), pi);
+  size_t index_q = std::distance(polynomials.begin(), qi);
+  Trace("neth") << "(Core) sPoly: " << p << " (" << index_p << "), " << q << " (" << index_q << ") -> " << s << std::endl;
   polynomials.push_back(Poly(s, p, q));
 }
 
@@ -170,7 +170,7 @@ void Tracer::reductionStart(CoCoA::ConstRefRingElem p)
   Assert(pi != polynomials.end());
   size_t index = std::distance(polynomials.begin(), pi); 
   currentReduction = Reduction(index);
-  //Trace("neth") << "(Core) reduction: " << p << " (" << index << ")" << std::endl;
+  Trace("neth") << "(Core) reduction: " << p << " (" << index << ")" << std::endl;
 }
 
 void Tracer::reductionStep(CoCoA::ConstRefRingElem q)
@@ -180,10 +180,10 @@ void Tracer::reductionStep(CoCoA::ConstRefRingElem q)
   d_reductionSeq.push_back(ostring(q));
 
   auto qi = std::find_if(polynomials.begin(), polynomials.end(), [&](const Poly &f) { return equalPoly(f.p, q); });
+  Trace("neth") << "reduction step: " << q << std::endl;
   Assert(qi != polynomials.end());
   size_t index = std::distance(polynomials.begin(), qi);
-  //Trace("neth") << "reduction step: " << q << std::endl;
-  //Trace("neth") << "-> " << q << " (" << index << ")" << std::endl;
+  Trace("neth") << "-> " << q << " (" << index << ")" << std::endl;
   currentReduction.steps.push_back(index);
 }
 
@@ -219,6 +219,8 @@ void Tracer::reductionEnd(CoCoA::ConstRefRingElem r)
   d_reductionSeq.clear();
 
   // Nethermind
+  Trace("neth") << "reduction end: " << r << std::endl;
+
   auto ip = polynomials[currentReduction.initialPoly].p;
   if(currentReduction.steps.empty()) {
     if(r == ip) {
@@ -365,20 +367,28 @@ void Tracer::printRedUNSAT() {
       const auto red = reductions.find(r_index);
       Assert(red != reductions.end());
       
-      std::cout << tab << "R(" << red->second.initialPoly << ", ";
+      std::cout << tab << "R(" << red->second.initialPoly << "; ";
       pstack.push_back(r_index);
 
       auto pred = polynomials[red->second.initialPoly].p;
-      for(const auto s: red->second.steps) { 
+      //std::cout << std::endl << "INITIAL: " << pred << std::endl;
+      for(const auto &s: red->second.steps) {
         const auto d = polynomials[s].p;
+        //std::cout << "D: " << d << std::endl;
         const auto pi = CoCoA::BeginIter(pred);
         const auto di = CoCoA::BeginIter(d);
         const auto lmp = CoCoA::coeff(pi) * CoCoA::monomial(CoCoA::owner(pred), CoCoA::PP(pi));
         const auto lmd = CoCoA::coeff(di) * CoCoA::monomial(CoCoA::owner(d), CoCoA::PP(di));
+        //std::cout << "LMP: " << lmp << std::endl;
+        //std::cout << "LMD: " << lmd << std::endl;
         const auto c = lmp / lmd; 
+        //std::cout << "C: " << c << std::endl;
         pred = pred - c * d;
+        //std::cout << "NEXT: " << pred << std::endl;
         
-        std::cout << s << "{" << c << "}, ";
+        std::cout << s << "{" << c << "}";
+        if (&s != &red->second.steps.back()) { std::cout << ", "; }
+        else { std::cout << "; "; } 
         pstack.push_back(s);
       }
       std::cout << red->second.finalPoly << ")" << std::endl;

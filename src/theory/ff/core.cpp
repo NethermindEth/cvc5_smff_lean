@@ -370,27 +370,35 @@ void Tracer::printRedUNSAT() {
       std::cout << tab << "R(" << red->second.initialPoly << "; ";
       pstack.push_back(r_index);
 
-      auto pred = polynomials[red->second.initialPoly].p;
-      //std::cout << std::endl << "INITIAL: " << pred << std::endl;
+      CoCoA::RingElem pred = polynomials[red->second.initialPoly].p;
+      CoCoA::RingElem left;
+
       for(const auto &s: red->second.steps) {
         const auto d = polynomials[s].p;
-        //std::cout << "D: " << d << std::endl;
-        const auto pi = CoCoA::BeginIter(pred);
-        const auto di = CoCoA::BeginIter(d);
-        const auto lmp = CoCoA::coeff(pi) * CoCoA::monomial(CoCoA::owner(pred), CoCoA::PP(pi));
-        const auto lmd = CoCoA::coeff(di) * CoCoA::monomial(CoCoA::owner(d), CoCoA::PP(di));
-        //std::cout << "LMP: " << lmp << std::endl;
-        //std::cout << "LMD: " << lmd << std::endl;
-        const auto c = lmp / lmd; 
-        //std::cout << "C: " << c << std::endl;
-        pred = pred - c * d;
-        //std::cout << "NEXT: " << pred << std::endl;
+
+        CoCoA::RingElem c;
+        while (true) {
+          const auto pi = CoCoA::BeginIter(pred);
+          const auto di = CoCoA::BeginIter(d);
+          const auto lmp = CoCoA::coeff(pi) * CoCoA::monomial(CoCoA::owner(pred), CoCoA::PP(pi));
+          const auto lmd = CoCoA::coeff(di) * CoCoA::monomial(CoCoA::owner(d), CoCoA::PP(di));
+
+          if (CoCoA::IsDivisible(lmp, lmd)) {
+            c = lmp / lmd;
+            pred = pred - c * d;
+            break;
+          } else {
+            left = left + lmp;
+            pred = pred - lmp;
+          }
+        }
         
         std::cout << s << "{" << c << "}";
         if (&s != &red->second.steps.back()) { std::cout << ", "; }
         else { std::cout << "; "; } 
         pstack.push_back(s);
       }
+
       std::cout << red->second.finalPoly << ")" << std::endl;
     }
   }

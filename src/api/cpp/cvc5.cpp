@@ -2932,6 +2932,7 @@ Term::const_iterator Term::end() const
 }
 
 const internal::Node& Term::getNode(void) const { return *d_node; }
+const internal::Node& Term::getNodeFF(void) const { return *d_node; }
 
 namespace detail {
 const internal::Rational& getRational(const internal::Node& node)
@@ -7260,6 +7261,20 @@ Result Solver::checkSat(void) const
       << internal::options::base::longName::incrementalSolving << ")";
   //////// all checks before this line
   return d_slv->checkSat();
+  ////////
+  CVC5_API_TRY_CATCH_END;
+}
+
+Result Solver::checkSatFF(std::map<Term, std::string> names) const
+{
+  CVC5_API_TRY_CATCH_BEGIN;
+  CVC5_API_CHECK(!d_slv->isQueryMade()
+                 || d_slv->getOptions().base.incrementalSolving)
+      << "cannot make multiple queries unless incremental solving is enabled "
+         "(try --"
+      << internal::options::base::longName::incrementalSolving << ")";
+  //////// all checks before this line
+  return d_slv->checkSatFF(names);
   ////////
   CVC5_API_TRY_CATCH_END;
 }

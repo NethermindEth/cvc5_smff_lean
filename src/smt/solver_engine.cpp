@@ -774,6 +774,19 @@ Result SolverEngine::checkSat()
   return res;
 }
 
+Result SolverEngine::checkSatFF(std::map<Term, std::string> names)
+{
+  beginCall(true);
+  std::map<Node, std::string> names_n;
+  for(const auto &i : names) {
+    names_n.insert({i.first.getNodeFF(), i.second});
+  }
+  d_env->d_namedNodes = &names_n;
+  Result res = checkSatInternal({});
+  endCall();
+  return res;
+}
+
 Result SolverEngine::checkSat(const Node& assumption)
 {
   beginCall(true);

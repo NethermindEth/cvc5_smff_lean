@@ -354,8 +354,9 @@ void Tracer::printRedUNSAT() {
       // const auto spoly = ((lcm / lmp) * polynomials[s1_index].p) - ((lcm / lmq) * polynomials[s2_index].p);
       // std::cout << "SPOLY " << spoly << std::endl;
 
-      std::cout << tab << "S(" << s1_index << ", " << s2_index << ", " << next;
-      std::cout << ", " << lcm << ")" << std::endl;
+      std::cout << "LCM: " << lcm << " LM: " << (lmp) << std::endl;
+      std::cout << tab << "S(" << s1_index << "{" << (lcm / lmp) << "}, " << s2_index << "{" << (lcm / lmq) <<  "}, " << next;
+      std::cout << ")" << std::endl;
       pstack.push_back(s1_index);
       pstack.push_back(s2_index);
 

@@ -93,16 +93,12 @@ Result SubTheory::postCheck(Theory::Effort e)
         for (const Node& node : d_facts)
         {
           enc.addFact(node);
-          std::cout << "FACT LEAVES: " << node << std::endl;
         }
         enc.endScan();
         // assert facts
         for (const Node& node : d_facts)
         {
           enc.addFact(node);
-          std::cout << "NODE[0] " << node[0].getKind() << std::endl;
-          // std::cout << "NODE[2] " << node[2] << std::endl;
-          // std::cout << "NODE[3] " << node[3] << std::endl;
         }
 
         // compute a GB
@@ -133,15 +129,9 @@ Result SubTheory::postCheck(Theory::Effort e)
         if (is_trivial)
         {
           if (options().ff.ffCertificate) { 
-            std::cout << "ENV" << std::endl;
-            for (const auto &n : *(d_env.d_namedNodes)) {
-              std::cout << "Name: " << n.second << std::endl;
-              std::cout << "Term: " << n.first << std::endl;
-            }
-            
             // tracer.printReductions();
             // std::cout << std::endl << "NEW" << std::endl;
-            tracer.printRedUNSAT(); 
+            tracer.printRedUNSAT(d_env, enc); 
           }
 
           Trace("ff::gb") << "Trivial GB" << std::endl;

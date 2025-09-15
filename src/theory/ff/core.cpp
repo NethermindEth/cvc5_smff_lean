@@ -22,6 +22,8 @@
 
 #ifdef CVC5_USE_COCOA
 
+#include "theory/rewriter.h"
+
 #include "theory/ff/core.h"
 
 #include <CoCoA/TmpGPoly.H>
@@ -30,6 +32,8 @@
 #include <sstream>
 
 #include "smt/assertions.h"
+#include "theory/ff/cocoa_encoder.h"
+#include "smt/env.h"
 
 namespace cvc5::internal {
 namespace theory {
@@ -302,7 +306,7 @@ void Tracer::printReductions() {
   }
 }
 
-void Tracer::printRedUNSAT() {
+void Tracer::printRedUNSAT(Env& env, CocoaEncoder& enc) {
   const size_t finalPoly = polynomials.size() - 1;
   
   std::vector<size_t> pstack;
@@ -354,7 +358,7 @@ void Tracer::printRedUNSAT() {
       // const auto spoly = ((lcm / lmp) * polynomials[s1_index].p) - ((lcm / lmq) * polynomials[s2_index].p);
       // std::cout << "SPOLY " << spoly << std::endl;
 
-      std::cout << "LCM: " << lcm << " LM: " << (lmp) << std::endl;
+      //std::cout << "LCM: " << lcm << " LM: " << (lmp) << std::endl;
       std::cout << tab << "S(" << s1_index << "{" << (lcm / lmp) << "}, " << s2_index << "{" << (lcm / lmq) <<  "}, " << next;
       std::cout << ")" << std::endl;
       pstack.push_back(s1_index);
@@ -410,9 +414,18 @@ void Tracer::printRedUNSAT() {
   std::cout << tab << ")" << std::endl;
 
   std::cout << tab << "POLYNOMIALS(" << std::endl; tab += "\t";
+  std::map<Node, std::string> namedNodes = *env.d_namedNodes;
+
   for(size_t i = 0; i < polynomials.size(); i += 1) {
     if(!seen[i]) { continue; }
+    for(const auto &nn : namedNodes) {
+      if (enc.getTermEncoding(env.getRewriter()->rewrite(nn.first)) == polynomials[i].p) { 
+        std::cout << tab << "PN(" << i << ", " << polynomials[i].p << ", " << nn.second << ")" << std::endl;
+        goto found_name;
+      }
+    }
     std::cout << tab << "P(" << i << ", " << polynomials[i].p << ")" << std::endl;
+    found_name:;
   }
 
   // POLYNOMIALS

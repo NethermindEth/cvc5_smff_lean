@@ -2932,6 +2932,7 @@ Term::const_iterator Term::end() const
 }
 
 const internal::Node& Term::getNode(void) const { return *d_node; }
+
 const internal::Node& Term::getNodeFF(void) const { return *d_node; }
 
 namespace detail {

@@ -34,6 +34,8 @@
 #include <unordered_map>
 
 #include "expr/node.h"
+#include "theory/ff/cocoa_encoder.h"
+#include "smt/env_obj.h"
 
 namespace cvc5::internal {
 namespace theory {
@@ -203,7 +205,7 @@ class Tracer
   Reduction currentReduction;
 
   void printReductions();
-  void printRedUNSAT();
+  void printRedUNSAT(Env& env, CocoaEncoder& enc);
   std::string yesno(bool b);
 
   bool equalPoly(const Poly &f, const CoCoA::RingElem &q) {

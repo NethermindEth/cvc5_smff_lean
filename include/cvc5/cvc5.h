@@ -1929,6 +1929,9 @@ class CVC5_EXPORT Term
    */
   std::vector<Term> getSkolemIndices() const;
 
+  /** @return The internal wrapped Node of this term. */
+  const internal::Node& getNodeFF(void) const;
+
  protected:
   /**
    * The associated term manager.
@@ -5655,6 +5658,8 @@ class CVC5_EXPORT Solver
    * @return The result of the satisfiability check.
    */
   Result checkSat() const;
+
+  Result checkSatFF(std::map<Term, std::string> names) const;
 
   /**
    * Check satisfiability assuming the given formula.

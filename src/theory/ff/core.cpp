@@ -266,9 +266,9 @@ void Tracer::addDep(const std::string& parent,
 }
 
 void Tracer::printReductions() {
-  std::cout << "\tPOLYNOMIALS: " << std::endl;
+  std::cout << " POLYNOMIALS: " << std::endl;
   for(size_t i = 0; i < polynomials.size(); i += 1) {
-    std::cout << i << ":\t" << polynomials[i].p;
+    std::cout << i << ": " << polynomials[i].p;
     if(polynomials[i].spoly) {
       auto p = std::find_if(polynomials.begin(), polynomials.end(), [&](const Poly &f) { return equalPoly(f, polynomials[i].s1); });
       auto q = std::find_if(polynomials.begin(), polynomials.end(), [&](const Poly &f) { return equalPoly(f, polynomials[i].s2); });
@@ -286,7 +286,7 @@ void Tracer::printReductions() {
     std::cout << std::endl;
   }
 
-  std::cout << "\tREDUCTIONS" << std::endl;
+  std::cout << " REDUCTIONS" << std::endl;
   for(size_t i = 1; i < polynomials.size(); i += 1) {
     const auto r = reductions.find(i); 
     //Trace("neth") << "POLY: " << i << std::endl;
@@ -317,8 +317,8 @@ void Tracer::printRedUNSAT(Env& env, CocoaEncoder& enc) {
 
   std::string tab = "";
 
-  std::cout << tab << "UNSAT(" << std::endl; tab += "\t";
-  std::cout << tab << "REDUCTIONS(" << std::endl; tab += "\t";
+  std::cout << tab << "UNSAT(" << std::endl; tab += " ";
+  std::cout << tab << "REDUCTIONS(" << std::endl; tab += " ";
   while(!pstack.empty()) {
     const size_t next = pstack.back();
     //Trace("neth") << "NEXT(" << yesno(seen[next] || next <= p_input_size) << "): " << next << std::endl;
@@ -413,8 +413,10 @@ void Tracer::printRedUNSAT(Env& env, CocoaEncoder& enc) {
   // REDUCTION
   std::cout << tab << ")" << std::endl;
 
-  std::cout << tab << "POLYNOMIALS(" << std::endl; tab += "\t";
-  std::map<Node, std::string> namedNodes = *env.d_namedNodes;
+  std::cout << tab << "POLYNOMIALS(" << std::endl; tab += " ";
+  std::map<Node, std::string> namedNodes = {};
+  if (env.d_namedNodes != nullptr) { namedNodes = *env.d_namedNodes; }
+  // std::map<Node, std::string> namedNodes = *env.d_namedNodes;
 
   for(size_t i = 0; i < polynomials.size(); i += 1) {
     if(!seen[i]) { continue; }

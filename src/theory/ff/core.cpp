@@ -372,6 +372,9 @@ void Tracer::printRedUNSAT(Env& env, CocoaEncoder& enc) {
       const auto red = reductions.find(r_index);
       Assert(red != reductions.end());
       
+      // We don't care about reductions that ended in the zero polynomial
+      if(red->second.finalPoly == 0) { pstack.pop_back(); continue; }
+
       std::cout << tab << "R(" << red->second.initialPoly << "; ";
       pstack.push_back(r_index);
 

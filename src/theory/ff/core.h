@@ -140,14 +140,14 @@ class Tracer
     bool reduction;
     CoCoA::RingElem r;
 
-    Poly(CoCoA::RingElem p) 
-      : p(p), spoly(false), monic(false), reduction(false) {} 
-    Poly(Reduction, CoCoA::RingElem r, CoCoA::RingElem p) 
-      : p(r), spoly(false), monic(false), reduction(true), r(p) {}
-    Poly(Monic, CoCoA::RingElem m, CoCoA::RingElem p) 
-      : p(m), spoly(false), monic(true), m(p), reduction(false) {} 
-    Poly(CoCoA::RingElem p, CoCoA::RingElem p1, CoCoA::RingElem p2)
-      : p(p), spoly(true), s1(p1), s2(p2), monic(false), reduction(false) {}
+    Poly(CoCoA::RingElem pp) 
+      : p(pp), spoly(false), monic(false), reduction(false) {} 
+    Poly(Reduction, CoCoA::RingElem rr, CoCoA::RingElem pp) 
+      : p(rr), spoly(false), monic(false), reduction(true), r(pp) {}
+    Poly(Monic, CoCoA::RingElem mm, CoCoA::RingElem pp) 
+      : p(mm), spoly(false), monic(true), m(pp), reduction(false) {} 
+    Poly(CoCoA::RingElem pp, CoCoA::RingElem p1, CoCoA::RingElem p2)
+      : p(pp), spoly(true), s1(p1), s2(p2), monic(false), reduction(false) {}
 
     bool operator==(const Poly &other) const { 
       return (p == other.p);

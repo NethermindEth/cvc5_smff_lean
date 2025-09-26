@@ -318,6 +318,14 @@ void Tracer::printRedUNSAT(Env& env, CocoaEncoder& enc) {
   std::string tab = "";
 
   std::cout << tab << "UNSAT(" << std::endl; tab += " ";
+  
+  std::cout << tab << "INDETS(";
+  for (const auto& var : CoCoA::indets(enc.polyRing())) {
+    std::cout << ostring(var);
+    if (var != CoCoA::indets(enc.polyRing()).back()) { std::cout << ", "; }
+  }
+  std::cout << ")" << std::endl;
+
   std::cout << tab << "REDUCTIONS(" << std::endl; tab += " ";
   while(!pstack.empty()) {
     const size_t next = pstack.back();

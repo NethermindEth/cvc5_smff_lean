@@ -319,7 +319,7 @@ void Tracer::printRedUNSAT(Env& env, CocoaEncoder& enc) {
 
   std::cout << tab << "UNSAT(" << std::endl; tab += " ";
   
-  std::cout << tab << "INDETS(";
+  std::cout << tab << "ORDER(";
   for (const auto& var : CoCoA::indets(enc.polyRing())) {
     std::cout << ostring(var);
     if (var != CoCoA::indets(enc.polyRing()).back()) { std::cout << ", "; }

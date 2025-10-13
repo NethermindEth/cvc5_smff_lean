@@ -19,6 +19,7 @@
 #define CVC5__SMT__SOLVER_ENGINE_H
 
 #include <cvc5/cvc5_export.h>
+#include <cvc5/cvc5.h>
 
 #include <map>
 #include <memory>
@@ -342,6 +343,7 @@ class CVC5_EXPORT SolverEngine
   Result checkSat();
   Result checkSat(const Node& assumption);
   Result checkSat(const std::vector<Node>& assumptions);
+  Result checkSatFF(std::map<Term, std::string> names);
 
   /**
    * Get a timeout core, which computes a subset of the current assertions that

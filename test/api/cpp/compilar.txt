@@ -1,0 +1,10 @@
+clang -DCVC5_ASSERTIONS -DCVC5_DEBUG -DCVC5_STATISTICS_ON -DCVC5_TRACING -DCVC5_USE_COCOA -Dcvc5_obj_EXPORTS \
+    -I/Volumes/arquivos/nethermind/Plonky3/CVC5-INSTALL/include \
+    -L/Volumes/arquivos/nethermind/Plonky3/CVC5-INSTALL/lib \
+    -rpath /Volumes/arquivos/nethermind/Plonky3/CVC5-INSTALL/lib \
+    -ggdb3 -gz -g \
+    -std=c++17 -Og \
+    -Wall -Wno-unused-private-field -Wsuggest-override -Wnon-virtual-dtor -Wimplicit-fallthrough -Wshadow \
+    -fno-inline -fno-operator-names -fvisibility=default \
+    -lcvc5 -lcvc5parser -lc++ \
+    ouroborous.cpp

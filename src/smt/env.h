@@ -73,6 +73,7 @@ class Env
   friend class smt::PfManager;
 
  public:
+  std::map<Node, std::string>* d_namedNodes;
   /**
    * Construct an Env with the given node manager.
    */

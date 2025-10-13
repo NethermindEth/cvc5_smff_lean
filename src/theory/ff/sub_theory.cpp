@@ -128,6 +128,12 @@ Result SubTheory::postCheck(Theory::Effort e)
         bool is_trivial = basis.size() == 1 && CoCoA::deg(basis.front()) == 0;
         if (is_trivial)
         {
+          if (options().ff.ffCertificate) { 
+            // tracer.printReductions();
+            // std::cout << std::endl << "NEW" << std::endl;
+            tracer.printRedUNSAT(d_env, enc); 
+          }
+
           Trace("ff::gb") << "Trivial GB" << std::endl;
           if (options().ff.ffTraceGb)
           {
@@ -164,6 +170,7 @@ Result SubTheory::postCheck(Theory::Effort e)
           if (root.empty())
           {
             // UNSAT
+            if (options().ff.ffCertificate) { std::cout << "UNSAT(NO_CERTIFICATE)" << std::endl; }
             setTrivialConflict();
           }
           else
@@ -172,6 +179,7 @@ Result SubTheory::postCheck(Theory::Effort e)
             Assert(d_model.empty());
             const auto nm = nodeManager();
             Trace("ff::model") << "Model GF(" << size() << "):" << std::endl;
+            if (options().ff.ffCertificate) { std::cout << "SAT(" << std::endl; }
             for (const auto& [idx, node] : enc.nodeIndets())
             {
               if (isFfLeaf(node))
@@ -179,9 +187,16 @@ Result SubTheory::postCheck(Theory::Effort e)
                 Node value = nm->mkConst(enc.cocoaFfToFfVal(root[idx]));
                 Trace("ff::model")
                     << " " << node << " = " << value << std::endl;
+                if (options().ff.ffCertificate) {
+                  const auto v = enc.cocoaFfToFfVal(root[idx]);
+                  std::cout << "\t" << "MODEL(" << node << ", ";
+                  std::cout << "FFV(" << v.getValue() << ", " << v.getFieldSize() << ")";
+                  std::cout << ")" << std::endl;
+                }
                 d_model.emplace(node, value);
               }
             }
+            if (options().ff.ffCertificate) { std::cout << ")" << std::endl; }
           }
         }
       }

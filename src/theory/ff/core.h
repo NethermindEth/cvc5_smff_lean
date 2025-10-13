@@ -34,6 +34,8 @@
 #include <unordered_map>
 
 #include "expr/node.h"
+#include "theory/ff/cocoa_encoder.h"
+#include "smt/env_obj.h"
 
 namespace cvc5::internal {
 namespace theory {
@@ -118,6 +120,98 @@ class Tracer
   std::function<void(CoCoA::ConstRefRingElem)> d_reductionStart{};
   std::function<void(CoCoA::ConstRefRingElem)> d_reductionStep{};
   std::function<void(CoCoA::ConstRefRingElem)> d_reductionEnd{};
+
+ public:
+  // Nethermind
+
+  struct Poly {
+    struct Monic final {};
+    struct Reduction final {};
+
+    CoCoA::RingElem p;
+
+    // If the poly is a spoly, p1 and p2 holds its "parents"
+    bool spoly;
+    CoCoA::RingElem s1, s2;
+
+    bool monic;
+    CoCoA::RingElem m;
+
+    bool reduction;
+    CoCoA::RingElem r;
+
+    Poly(CoCoA::RingElem pp) 
+      : p(pp), spoly(false), monic(false), reduction(false) {} 
+    Poly(Reduction, CoCoA::RingElem rr, CoCoA::RingElem pp) 
+      : p(rr), spoly(false), monic(false), reduction(true), r(pp) {}
+    Poly(Monic, CoCoA::RingElem mm, CoCoA::RingElem pp) 
+      : p(mm), spoly(false), monic(true), m(pp), reduction(false) {} 
+    Poly(CoCoA::RingElem pp, CoCoA::RingElem p1, CoCoA::RingElem p2)
+      : p(pp), spoly(true), s1(p1), s2(p2), monic(false), reduction(false) {}
+
+    bool operator==(const Poly &other) const { 
+      return (p == other.p);
+    }
+  };
+
+  struct Reduction {
+    size_t initialPoly = 0;
+    size_t finalPoly = -1;
+    bool isFinalZeroPoly = false;
+    bool isFinalZeroDegPoly = false;
+    std::vector<size_t> steps;
+
+    Reduction() {}
+    Reduction(size_t i) : initialPoly(i) {}
+    Reduction(const Reduction &other) {
+      initialPoly = other.initialPoly;
+      finalPoly = other.finalPoly;
+      isFinalZeroPoly = other.isFinalZeroPoly;
+      isFinalZeroDegPoly = other.isFinalZeroDegPoly;
+      steps = other.steps;
+    }
+
+    Reduction& operator=(const Reduction &other) {
+      if (this != &other) {
+        initialPoly = other.initialPoly;
+        finalPoly = other.finalPoly;
+        isFinalZeroPoly = other.isFinalZeroPoly;
+        isFinalZeroDegPoly = other.isFinalZeroDegPoly;
+        steps = other.steps;
+      }
+
+      return *this;
+    }
+  };
+
+  // struct PolyReduction {
+  //   bool zeroPoly = false;
+  //   bool zeroDegPoly = false;
+  //   std::string zeroDegPolyStr = "";
+  //   size_t initialPoly;
+  //   size_t finalPoly;
+  //   std::vector<size_t> steps;
+  // };
+  
+  size_t p_input_size = 0;
+  CoCoA::RingElem ZERO;
+  std::vector<Poly> polynomials{};
+  // Table from Polynomial (RingElem) to its index in polynomials.
+  //std::unordered_map<CoCoA::RingElem, size_t> polyIndex{};
+  // Associate initial polynomial index with its reduction
+  std::unordered_map<size_t, Reduction> reductions{};
+
+  // Store current reduction
+  Reduction currentReduction;
+
+  void printReductions();
+  void printRedUNSAT(Env& env, CocoaEncoder& enc);
+  std::string yesno(bool b);
+
+  bool equalPoly(const Poly &f, const CoCoA::RingElem &q) {
+    if(CoCoA::IsZero(f.p)) { return false; }
+    else { return f.p == q; }
+  }
 };
 
 }  // namespace ff

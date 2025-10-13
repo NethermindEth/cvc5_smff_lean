@@ -169,6 +169,9 @@ void CocoaEncoder::addFact(const Node& fact)
     Assert(d_stage == Stage::Encode);
     encodeFact(fact);
     d_polys.push_back(d_cache.at(fact));
+
+    Trace("neth") << "(cocoa-enc) fact: " << fact << std::endl;
+    Trace("neth") << "(cocoa-enc) poly: " << d_cache.at(fact) << std::endl;
   }
 }
 

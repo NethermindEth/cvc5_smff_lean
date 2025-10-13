@@ -33,7 +33,7 @@
 // internal includes
 #include "expr/node.h"
 #include "theory/ff/cocoa_util.h"
-#include "theory/ff/core.h"
+//#include "theory/ff/core.h"
 #include "theory/ff/util.h"
 
 namespace cvc5::internal {

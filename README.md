@@ -6,7 +6,7 @@
   https://img.shields.io/endpoint?url=https://cvc5.stanford.edu/downloads/builds/coverage/nightly-coverage.json)](
     https://cvc5.stanford.edu/downloads/builds/coverage)
 
-cvc5
+cvc5 with FF proof extraction
 ===============================================================================
 
 cvc5 is a tool for determining the satisfiability of a first order formula

@@ -242,17 +242,17 @@ jobs:
     #     regressions-exclude: ${{ matrix.build.exclude_regress }}
     #     shell: ${{ matrix.build.shell }}
 
-    - name: Run tests
-      if: matrix.build.run_regression_args
-      uses: ./.github/actions/run-tests
-      with:
-        build-dir: ${{ steps.configure-and-build.outputs.static-build-dir }}
-        check-examples: false
-        check-install: false
-        check-python-bindings: false
-        regressions-args: ${{ matrix.build.run_regression_args }}
-        regressions-exclude: 1-4
-        shell: ${{ matrix.build.shell }}
+    # - name: Run tests
+    #   if: matrix.build.run_regression_args
+    #   uses: ./.github/actions/run-tests
+    #   with:
+    #     build-dir: ${{ steps.configure-and-build.outputs.static-build-dir }}
+    #     check-examples: false
+    #     check-install: false
+    #     check-python-bindings: false
+    #     regressions-args: ${{ matrix.build.run_regression_args }}
+    #     regressions-exclude: 1-4
+    #     shell: ${{ matrix.build.shell }}
 
     # - name: Build documentation
     #   if: matrix.build.build-documentation

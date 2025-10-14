@@ -95,6 +95,45 @@ if(USE_EDITLINE)
 endif()
 
 #-----------------------------------------------------------------------------#
+# ffdriver binary configuration
+
+add_executable(ffdriver ffdriver.cpp)
+#target_compile_definitions(ffdriver PRIVATE -D__BUILDING_CVC5DRIVER -Dcvc5_obj_EXPORTS)
+set_target_properties(ffdriver
+  PROPERTIES
+    OUTPUT_NAME ffdriver
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+if(PROGRAM_PREFIX)
+  install(PROGRAMS
+    $<TARGET_FILE:ffdriver>
+    DESTINATION ${CMAKE_INSTALL_BINDIR}
+    RENAME ${PROGRAM_PREFIX}ffdriver)
+else()
+  install(TARGETS ffdriver
+    DESTINATION ${CMAKE_INSTALL_BINDIR})
+endif()
+
+# In order to get a fully static executable we have to make sure that we also
+# use the static system libraries.
+#   https://cmake.org/cmake/help/v3.0/prop_tgt/LINK_SEARCH_START_STATIC.html
+#   https://cmake.org/cmake/help/v3.0/prop_tgt/LINK_SEARCH_END_STATIC.html
+if(NOT BUILD_SHARED_LIBS)
+  if(STATIC_BINARY)
+    set_target_properties(ffdriver PROPERTIES LINK_FLAGS -static)
+    set_target_properties(ffdriver PROPERTIES LINK_SEARCH_START_STATIC ON)
+    set_target_properties(ffdriver PROPERTIES LINK_SEARCH_END_STATIC ON)
+  endif()
+  set_target_properties(ffdriver PROPERTIES INSTALL_RPATH "")
+endif()
+target_link_libraries(ffdriver PUBLIC cvc5 cvc5parser)
+
+# if(USE_EDITLINE)
+#   target_link_libraries(cvc5-bin PUBLIC ${Editline_LIBRARIES})
+#   target_link_libraries(main-test PUBLIC ${Editline_LIBRARIES})
+#   target_include_directories(main PUBLIC ${Editline_INCLUDE_DIRS})
+# endif()
+
+#-----------------------------------------------------------------------------#
 # Generate language tokens header files.
 
 add_custom_command(

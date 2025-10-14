@@ -32,25 +32,25 @@ runs:
       shell: ${{ inputs.shell }}
       run: echo "MACOSX_DEPLOYMENT_TARGET=${{ inputs.macos-target }}" >> $GITHUB_ENV
 
-    - name: Shared build
-      id: shared-build
-      # Boolean inputs are actually strings:
-      # https://github.com/actions/runner/issues/1483
-      if: inputs.build-shared == '' || inputs.build-shared == 'true'
-      shell: ${{ inputs.shell }}
-      run: |
-        echo "::group::Shared build"
-        ${{ inputs.configure-env }} ./configure.sh ${{ inputs.configure-config }} \
-          --prefix=$(pwd)/build-shared/install --werror --name=build-shared \
-          -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_C_COMPILER_LAUNCHER=ccache
+    # - name: Shared build
+    #   id: shared-build
+    #   # Boolean inputs are actually strings:
+    #   # https://github.com/actions/runner/issues/1483
+    #   if: inputs.build-shared == '' || inputs.build-shared == 'true'
+    #   shell: ${{ inputs.shell }}
+    #   run: |
+    #     echo "::group::Shared build"
+    #     ${{ inputs.configure-env }} ./configure.sh ${{ inputs.configure-config }} \
+    #       --prefix=$(pwd)/build-shared/install --werror --name=build-shared \
+    #       -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_C_COMPILER_LAUNCHER=ccache
         
-        cd build-shared/ && pwd=$(pwd)
-        ccache --set-config="base_dir=$pwd"
+    #     cd build-shared/ && pwd=$(pwd)
+    #     ccache --set-config="base_dir=$pwd"
         
-        make -j${{ env.num_proc }}
+    #     make -j${{ env.num_proc }}
 
-        echo "build-dir=$pwd" >> $GITHUB_OUTPUT 
-        echo "::endgroup::"
+    #     echo "build-dir=$pwd" >> $GITHUB_OUTPUT 
+    #     echo "::endgroup::"
 
     - name: Static build
       id: static-build

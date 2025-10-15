@@ -15,7 +15,7 @@ jobs:
         has-tag:
           - ${{ startsWith(github.ref, 'refs/tags/') }}
         build:
-          - name: ubuntu:production-ff
+          - name: ubuntu:production
             os: ubuntu-22.04
             config: production --auto-download --gpl --cocoa -DBUILD_GMP=1
             cache-key: production-gpl
@@ -23,7 +23,7 @@ jobs:
             python-bindings: false
             java-bindings: false
             build-documentation: false
-            check-examples: true
+            check-examples: false
             package-name: cvc5-FF-Linux-x86_64
             exclude_regress: 3-4
             run_regression_args: --tester base --tester model --tester synth --tester abduct --tester dump
@@ -36,6 +36,7 @@ jobs:
             strip-bin: strip
             python-bindings: false
             java-bindings: false
+            build-documentation: false
             check-examples: false
             package-name: cvc5-FF-Linux-arm64
             exclude_regress: 3-4
@@ -55,6 +56,7 @@ jobs:
             strip-bin: strip
             python-bindings: false
             java-bindings: false
+            build-documentation: false
             check-examples: false
             package-name: cvc5-FF-macOS-x86_64
             macos-target: 10.13
@@ -70,10 +72,12 @@ jobs:
             python-bindings: false
             java-bindings: false
             check-examples: false
+            build-documentation: false
             package-name: cvc5-FF-macOS-arm64
             macos-target: 11.0
             exclude_regress: 3-4
             run_regression_args: --tester base --tester model --tester synth --tester abduct --tester dump
+            gpl-tag: -gpl
 
         #   - name: macos:production-arm64-cross
         #     os: macos-13

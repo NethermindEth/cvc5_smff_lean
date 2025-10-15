@@ -17,8 +17,8 @@ jobs:
         build:
           - name: ubuntu:production-ff
             os: ubuntu-22.04
-            config: production --auto-download --gpl --cocoa -DBUILD_GMP=1
-            cache-key: production
+            config: production --auto-download --gpl --cocoa --static --static-binary -DBUILD_GMP=1
+            cache-key: production-gpl
             strip-bin: strip
             python-bindings: false
             java-bindings: false
@@ -29,17 +29,18 @@ jobs:
             run_regression_args: --tester base --tester model --tester synth --tester abduct --tester dump
             gpl-tag: -gpl
 
-        #   - name: ubuntu:production-arm64
-        #     os: ubuntu-22.04-arm
-        #     config: production --auto-download --all-bindings --editline -DBUILD_GMP=1
-        #     cache-key: production-arm64
-        #     strip-bin: strip
-        #     python-bindings: true
-        #     java-bindings: true
-        #     check-examples: true
-        #     package-name: cvc5-Linux-arm64
-        #     exclude_regress: 3-4
-        #     run_regression_args: --tester base --tester model --tester synth --tester abduct --tester dump
+          - name: ubuntu:production-arm64
+            os: ubuntu-22.04-arm
+            config: production --auto-download --gpl --cocoa --static --static-binary -DBUILD_GMP=1
+            cache-key: production-arm64-gpl
+            strip-bin: strip
+            python-bindings: false
+            java-bindings: false
+            check-examples: false
+            package-name: cvc5-FF-Linux-arm64
+            exclude_regress: 3-4
+            run_regression_args: --tester base --tester model --tester synth --tester abduct --tester dump
+            gpl-tag: -gpl
 
         #   - name: ubuntu:production-arm64-cross
         #     os: ubuntu-latest
@@ -47,31 +48,32 @@ jobs:
         #     cache-key: production-arm64-cross
         #     strip-bin: aarch64-linux-gnu-strip
 
-        #   - name: macos:production
-        #     os: macos-13
-        #     config: production --auto-download --all-bindings --editline -DBUILD_GMP=1
-        #     cache-key: production
-        #     strip-bin: strip
-        #     python-bindings: true
-        #     java-bindings: true
-        #     check-examples: true
-        #     package-name: cvc5-macOS-x86_64
-        #     macos-target: 10.13
-        #     exclude_regress: 3-4
-        #     run_regression_args: --tester base --tester model --tester synth --tester abduct --tester dump
+          - name: macos:production
+            os: macos-13
+            config: production --auto-download --gpl --cocoa --static --static-binary -DBUILD_GMP=1
+            cache-key: production-gpl
+            strip-bin: strip
+            python-bindings: false
+            java-bindings: false
+            check-examples: false
+            package-name: cvc5-FF-macOS-x86_64
+            macos-target: 10.13
+            exclude_regress: 3-4
+            run_regression_args: --tester base --tester model --tester synth --tester abduct --tester dump
+            gpl-tag: -gpl
 
-        #   - name: macos:production-arm64
-        #     os: macos-14
-        #     config: production --auto-download --all-bindings --editline -DBUILD_GMP=1
-        #     cache-key: production-arm64
-        #     strip-bin: strip
-        #     python-bindings: true
-        #     java-bindings: true
-        #     check-examples: true
-        #     package-name: cvc5-macOS-arm64
-        #     macos-target: 11.0
-        #     exclude_regress: 3-4
-        #     run_regression_args: --tester base --tester model --tester synth --tester abduct --tester dump
+          - name: macos:production-arm64
+            os: macos-14
+            config: production --auto-download --gpl --cocoa --static --static-binary -DBUILD_GMP=1
+            cache-key: production-arm64-gpl
+            strip-bin: strip
+            python-bindings: false
+            java-bindings: false
+            check-examples: false
+            package-name: cvc5-FF-macOS-arm64
+            macos-target: 11.0
+            exclude_regress: 3-4
+            run_regression_args: --tester base --tester model --tester synth --tester abduct --tester dump
 
         #   - name: macos:production-arm64-cross
         #     os: macos-13

@@ -17,7 +17,7 @@ jobs:
         build:
           - name: ubuntu:production-ff
             os: ubuntu-22.04
-            config: production --auto-download --gpl --cocoa --static --static-binary -DBUILD_GMP=1
+            config: production --auto-download --gpl --cocoa -DBUILD_GMP=1
             cache-key: production-gpl
             strip-bin: strip
             python-bindings: false
@@ -31,7 +31,7 @@ jobs:
 
           - name: ubuntu:production-arm64
             os: ubuntu-22.04-arm
-            config: production --auto-download --gpl --cocoa --static --static-binary -DBUILD_GMP=1
+            config: production --auto-download --gpl --cocoa -DBUILD_GMP=1
             cache-key: production-arm64-gpl
             strip-bin: strip
             python-bindings: false
@@ -50,7 +50,7 @@ jobs:
 
           - name: macos:production
             os: macos-13
-            config: production --auto-download --gpl --cocoa --static --static-binary -DBUILD_GMP=1
+            config: production --auto-download --gpl --cocoa -DBUILD_GMP=1
             cache-key: production-gpl
             strip-bin: strip
             python-bindings: false
@@ -64,7 +64,7 @@ jobs:
 
           - name: macos:production-arm64
             os: macos-14
-            config: production --auto-download --gpl --cocoa --static --static-binary -DBUILD_GMP=1
+            config: production --auto-download --gpl --cocoa -DBUILD_GMP=1
             cache-key: production-arm64-gpl
             strip-bin: strip
             python-bindings: false
